@@ -21,8 +21,8 @@ function freePort() {
 }
 
 export function tempDataDir(seed) {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "flatmate-court-"));
-  if (seed) fs.writeFileSync(path.join(dir, "cases.json"), JSON.stringify(seed));
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "gully-umpire-"));
+  if (seed) fs.writeFileSync(path.join(dir, "matches.json"), JSON.stringify(seed));
   return dir;
 }
 
@@ -35,7 +35,7 @@ export async function startServer({ env = {}, dataDir = tempDataDir() } = {}) {
       ...process.env,
       GROQ_API_KEY: "",
       MONGODB_URI: "",
-      MOCK_COURT: "1",
+      MOCK_UMPIRE: "1",
       DISABLE_RATE_LIMIT: "1",
       NEXT_TELEMETRY_DISABLED: "1",
       DATA_DIR: dataDir,
@@ -69,7 +69,7 @@ export async function startServer({ env = {}, dataDir = tempDataDir() } = {}) {
   };
 }
 
-// Small JSON client with the case tokens passed as query params, like the real pages do.
+// Small JSON client with the scorer token passed as a query param, like the real pages do.
 export function client(base) {
   return async function call(method, url, { body, k, p } = {}) {
     const q = new URLSearchParams();
