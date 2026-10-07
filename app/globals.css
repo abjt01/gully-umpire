@@ -116,7 +116,7 @@ button:disabled { opacity: 0.55; cursor: progress; }
 .link { background: none; border: 0; padding: 4px 0; color: var(--pitch); }
 .small { padding: 7px 12px; font-size: 0.88rem; }
 .actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
-.chip { display: inline-block; border: 1px dashed var(--line); border-radius: 999px; padding: 6px 12px; font-size: 0.88rem; font-weight: 600; background: var(--bg); }
+.chip { display: inline-block; border: 1px dashed var(--line); border-radius: 999px; padding: 6px 12px; font-size: 0.88rem; font-weight: 600; background: var(--bg); white-space: normal; text-align: left; max-width: 100%; }
 .chips { display: flex; flex-wrap: wrap; gap: 6px; }
 
 .error { background: color-mix(in srgb, var(--wicket) 14%, transparent); color: var(--wicket); border-radius: 12px; padding: 10px 12px; font-weight: 600; }

@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 import { api, rememberMatch } from "./api";
 
 const EXAMPLES = [
@@ -22,6 +22,10 @@ const SWITCHES = [
   ["noBallRebowl", "No ball is bowled again"],
 ];
 
+// True once React has taken over the page, so taps on a slow phone aren't lost before hydration.
+const noop = () => () => {};
+const useHydrated = () => useSyncExternalStore(noop, () => true, () => false);
+
 const splitNames = (s) =>
   s
     .split(/[\n,]/)
@@ -30,6 +34,7 @@ const splitNames = (s) =>
 
 export default function NewMatch() {
   const router = useRouter();
+  const ready = useHydrated();
   const [teams, setTeams] = useState([
     { name: "", players: "" },
     { name: "", players: "" },
@@ -89,7 +94,7 @@ export default function NewMatch() {
   }
 
   return (
-    <form className="card" onSubmit={start} noValidate>
+    <form className="card" onSubmit={start} noValidate data-ready={ready || undefined}>
       <div className="two">
         {[0, 1].map((i) => (
           <fieldset key={i}>
@@ -166,7 +171,7 @@ export default function NewMatch() {
           </button>
         ))}
       </div>
-      <button type="button" className="small" disabled={!rulesText.trim() || busy === "rules"} onClick={checkRules}>
+      <button type="button" className="small" disabled={!ready || !rulesText.trim() || busy === "rules"} onClick={checkRules}>
         {busy === "rules" ? "Reading your rules…" : "Check how the umpire reads them"}
       </button>
 
@@ -214,7 +219,7 @@ export default function NewMatch() {
           {error}
         </p>
       )}
-      <button className="primary wide" type="submit" disabled={busy === "start"}>
+      <button className="primary wide" type="submit" disabled={!ready || busy === "start"}>
         {busy === "start" ? "Setting up the pitch…" : "Start the match"}
       </button>
     </form>
