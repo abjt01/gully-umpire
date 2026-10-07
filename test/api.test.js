@@ -137,9 +137,11 @@ describe("a whole match", () => {
     const { id, k } = await newMatch({ rulesText: "" });
     const score = (text) => call("POST", `/api/matches/${id}/call`, { k, body: { text } });
 
-    for (const t of ["four", "1", "dot", "wide", "bowled", "2", "single"]) await score(t);
+    for (const t of ["four", "1", "dot", "wide", "bowled", "2"]) await score(t);
+    assert.match(said(await score("single")), /End of the innings\. Gali 4 made 9 for 1\. Building C need 10 to win off 6 balls/);
     let { data } = await call("GET", `/api/matches/${id}`);
     assert.equal(data.innings[0].done, true);
+    assert.equal(data.lastCall.heard, "single");
     assert.equal(data.innings[1].target, 10);
 
     const notable = await score("six");
