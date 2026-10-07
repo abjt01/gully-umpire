@@ -230,6 +230,11 @@ describe("quick calls", () => {
 });
 
 describe("speech-to-text quirks", () => {
+  test("hinglish written in cyrillic", () => {
+    assert.equal(quickParse("чauka.")[0].runs, 4);
+    assert.equal(quickParse("чхакка")[0].runs, 6);
+  });
+
   test("leg byes misheard as bies", () => {
     assert.deepEqual([quickParse("two leg bies.")[0].extra, quickParse("two leg bies.")[0].extraRuns], ["lb", 2]);
   });
