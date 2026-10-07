@@ -178,6 +178,12 @@ describe("other events", () => {
     assert.equal(inn(s).bowlers[0].runs, 5);
   });
 
+  test("a batter can't bowl to their own team", () => {
+    const s = replay(setup(), [{ kind: "bowler", name: "rohan" }, b({ runs: 1 })]);
+    assert.equal(s.log[0].ignored, "rohan is batting right now");
+    assert.notEqual(inn(s).bowlers[0].name.toLowerCase(), "rohan");
+  });
+
   test("renaming a batter only works before they've faced a ball", () => {
     const s = replay(setup(), [{ kind: "batter", name: "Virat", end: "striker" }, b({ runs: 1 }), { kind: "batter", name: "X", end: "nonStriker" }]);
     assert.equal(inn(s).batters[0].name, "Virat");
