@@ -197,7 +197,8 @@ export default function MatchRoom({ id, k }) {
           <ul className="feed">
             {feed.slice(0, 30).map((l) => (
               <li key={l.index}>
-                <span className="what">{l.note || l.said}</span>
+                <span className="what">{l.said}</span>
+                {l.note && <span className="meta"> · {l.note}</span>}
                 {l.commentary && <span className="line">“{l.commentary}”</span>}
                 {l.after && (
                   <span className="meta">
