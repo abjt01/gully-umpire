@@ -5,6 +5,8 @@
 
 Shout the score, keep the phone in your pocket. Gully Umpire scores street cricket by voice: someone yells "four!", "wide!" or "out, caught by Rohan!", and it keeps the scorecard, says the score back out loud, and plays commentator after the big moments. It plays by your lane's rules too: over the wall is out, one tip one hand, last man stands.
 
+**Try it:** [gully-umpire-fu6e.onrender.com](https://gully-umpire-fu6e.onrender.com). It's on a free plan, so the first load after a quiet spell takes about half a minute.
+
 Built for the Hacktoberfest 2026 DEV challenge, week 1: *Touch Grass*.
 
 <table>
