@@ -228,3 +228,22 @@ describe("quick calls", () => {
     assert.equal(normaliseEvent({ kind: "bowler", name: "  " }), null);
   });
 });
+
+describe("speech-to-text quirks", () => {
+  test("leg byes misheard as bies", () => {
+    assert.deepEqual([quickParse("two leg bies.")[0].extra, quickParse("two leg bies.")[0].extraRuns], ["lb", 2]);
+  });
+
+  test("a no ball with the runs glued to another word", () => {
+    const [e] = quickParse("No ball, pichauka, mara.");
+    assert.deepEqual([e.extra, e.runs, e.boundary], ["nb", 4, true]);
+  });
+
+  test("names heard in lowercase go back to how they were typed", async () => {
+    const { fixNames } = await import("../../lib/calls.js");
+    const [e] = fixNames(quickParse("caught by neel"), ["Rohan", "Neel"]);
+    assert.equal(e.wicket.fielder, "Neel");
+    const [b2] = fixNames([{ kind: "bowler", name: "raj" }], []);
+    assert.equal(b2.name, "Raj");
+  });
+});

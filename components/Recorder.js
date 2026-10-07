@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 const TYPES = ["audio/webm;codecs=opus", "audio/webm", "audio/mp4", "audio/ogg"];
 const EXT = { "audio/webm": "webm", "audio/mp4": "mp4", "audio/ogg": "ogg" };
 const MAX_MS = 8000;
+const MIN_MS = 450; // shorter than this is a tap, not a call, and Whisper invents words for silence
 
 // Hold to talk. The mic stream stays open between calls so the browser only asks once.
 export default function Recorder({ onAudio, busy, onError }) {
@@ -12,6 +13,7 @@ export default function Recorder({ onAudio, busy, onError }) {
   const rec = useRef(null);
   const chunks = useRef([]);
   const timer = useRef(null);
+  const started = useRef(0);
   const [live, setLive] = useState(false);
 
   useEffect(
@@ -44,11 +46,16 @@ export default function Recorder({ onAudio, busy, onError }) {
       clearTimeout(timer.current);
       rec.current = null;
       setLive(false);
+      if (Date.now() - started.current < MIN_MS) {
+        onError("Hold the button while you speak, then let go.");
+        return;
+      }
       const mime = (r.mimeType || type || "audio/webm").split(";")[0];
       const blob = new Blob(chunks.current, { type: mime });
       onAudio(blob, `call.${EXT[mime] || "webm"}`);
     };
     r.start();
+    started.current = Date.now();
     rec.current = r;
     setLive(true);
     timer.current = setTimeout(stop, MAX_MS);
